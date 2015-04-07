@@ -34,9 +34,8 @@ public:
 	void SetAsActiveMaterial(); //look into establishing a render pipeline
 
 	//make sure these used cached lookup values for best performance
-	void SetShaderModelMatrix(glm::mat4& _modelMatrix);
-	void SetShaderProjectionMatrix(glm::mat4& _projectionMatrix);
-	void SetShaderViewMatrix(glm::mat4& _viewMatrix);
+	void SetShaderWorldMatrix(glm::mat4& _worldMatrix);
+	void SetShaderProjectionViewMatrix(glm::mat4& _projectionMatrix);
 
 private:
 
@@ -49,8 +48,7 @@ private:
 	int specularShaderLocation;
 	int emissiveShaderLocation;
 
-	int modelMatrixShaderLocation;
-	int viewMatrixShaderLocation;
-	int projectionMatrixShaderLocation;
+	int worldMatrixShaderLocation;
+	int projectionViewMatrixShaderLocation;
 
 };

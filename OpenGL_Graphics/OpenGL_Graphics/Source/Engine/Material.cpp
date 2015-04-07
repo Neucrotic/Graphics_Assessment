@@ -14,9 +14,8 @@ void Material::SetShader(unsigned int _shaderID)
 	emissiveShaderLocation = glGetUniformLocation(shaderID, "emissiveTexture");
 
 	//fetch uniform data from shaders for matrix locations
-	modelMatrixShaderLocation = glGetUniformLocation(shaderID, "Model");
-	viewMatrixShaderLocation = glGetUniformLocation(shaderID, "View");
-	projectionMatrixShaderLocation = glGetUniformLocation(shaderID, "Projection");
+	worldMatrixShaderLocation = glGetUniformLocation(shaderID, "World");
+	projectionViewMatrixShaderLocation = glGetUniformLocation(shaderID, "ProjectionView");
 
 	MaterialHandler::Get()->ConfigureOpenGLTextureSlots(shaderID);
 }
@@ -48,23 +47,16 @@ void Material::SetAsActiveMaterial()
 	}
 }
 
-void Material::SetShaderModelMatrix(glm::mat4& _modelMatrix)
+void Material::SetShaderWorldMatrix(glm::mat4& _worldMatrix)
 {
 	glUseProgram(shaderID); //bind shader program
 
-	glUniformMatrix4fv(modelMatrixShaderLocation, 1, false, glm::value_ptr(_modelMatrix)); //set the uniform to passed in value
+	glUniformMatrix4fv(worldMatrixShaderLocation, 1, false, glm::value_ptr(_worldMatrix)); //set the uniform to passed in value
 }
 
-void Material::SetShaderProjectionMatrix(glm::mat4& _projectionMatrix)
+void Material::SetShaderProjectionViewMatrix(glm::mat4& _projectionViewMatrix)
 {
 	glUseProgram(shaderID); //bind shader program
 
-	glUniformMatrix4fv(projectionMatrixShaderLocation, 1, false, glm::value_ptr(_projectionMatrix)); //set the uniform to passed in value
-}
-
-void Material::SetShaderViewMatrix(glm::mat4& _viewMatrix)
-{
-	glUseProgram(shaderID); //bind shader program
-
-	glUniformMatrix4fv(viewMatrixShaderLocation, 1, false, glm::value_ptr(_viewMatrix)); //set the uniform to passed in value
+	glUniformMatrix4fv(projectionViewMatrixShaderLocation, 1, false, glm::value_ptr(_projectionViewMatrix)); //set the uniform to passed in value
 }

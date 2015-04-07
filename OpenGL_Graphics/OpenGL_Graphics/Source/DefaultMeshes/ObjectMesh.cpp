@@ -104,7 +104,7 @@ void ObjectMesh::CreateMaterialFromMaterials(vector<tinyobj::material_t>& _mater
 	tinyobj::material_t& mat = _materials[0];
 
 	SetMaterial(MaterialHandler::Get()->CreateNewMaterial(&mat, directoryPath));
-	GetMaterial()->SetShader(ShaderHandler::Get()->LoadShader((string)"OBJShader", "Shaders/ObjShader.vert", "Shaders/ObjShader.frag"));
+	GetMaterial()->SetShader(ShaderHandler::Get()->LoadShader((string)"OBJShader", "Data/shaders/lighting.vert", "Data/shaders/lighting.frag"));
 }
 
 string ObjectMesh::GetMaterialDirectory()

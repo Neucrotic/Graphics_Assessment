@@ -70,7 +70,7 @@ bool Renderable::PrepareToRender(glm::mat4 _transform)
 	}
 
 	//set transform
-	material->SetShaderModelMatrix(_transform);
+	material->SetShaderWorldMatrix(_transform);
 
 	return true;
 }

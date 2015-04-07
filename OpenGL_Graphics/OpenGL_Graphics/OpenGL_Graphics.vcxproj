@@ -95,7 +95,9 @@
     <ClCompile Include="Source\Gizmos_Fix.cpp" />
     <ClCompile Include="Source\gl_core_4_4.c" />
     <ClCompile Include="Source\main.cpp" />
+    <ClCompile Include="Source\Tutorials\AdvTexture.cpp" />
     <ClCompile Include="Source\Tutorials\Lighting.cpp" />
+    <ClCompile Include="Source\Tutorials\ProceduralGen.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Dependincies\FBXLoader\FBXFile.h" />
@@ -116,7 +118,9 @@
     <ClInclude Include="Source\Engine\TextureLoader.h" />
     <ClInclude Include="Source\Gizmos_Fix.h" />
     <ClInclude Include="Source\gl_core_4_4.h" />
+    <ClInclude Include="Source\Tutorials\AdvTexture.h" />
     <ClInclude Include="Source\Tutorials\Lighting.h" />
+    <ClInclude Include="Source\Tutorials\ProceduralGen.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Data\shaders\advTexture.frag" />

@@ -1,5 +1,5 @@
 #include "AdvTexture.h"
-#include "Cameras/MobileCamera.h"
+#include "Engine/MobileCamera.h"
 #include "Engine/ShaderHandler.h"
 #include "Engine/MaterialHandler.h"
 #include "DefaultMeshes/CubeMesh.h"
@@ -53,13 +53,11 @@ bool AdvTexture::Startup()
 	//shader initialization
 	shaderProg = ShaderHandler::Get()->LoadShader((string)"TexShader", "data/shaders/advTexture.vert", "data/shaders/advTexture.frag");
 	
-	cube = new CubeMesh(10.0f);
-	//quad->
-	
+	cube = new CubeMesh(10.0f);	
 
 	Material* pRockMaterial = MaterialHandler::Get()->CreateNewMaterial((string)"Rock");
-	pRockMaterial->SetTexture(Material::DIFFUSE, textureLoader->LoadTexture((string)"data/textures/rock_diffuse.tga"));
-	pRockMaterial->SetTexture(Material::NORMAL, textureLoader->LoadTexture((string)"data/textures/rock_normal.tga"));
+	pRockMaterial->SetTexture(Material::DIFFUSE, textureLoader->LoadTexture((string)"Data/textures/rock_diffuse.tga"));
+	pRockMaterial->SetTexture(Material::NORMAL, textureLoader->LoadTexture((string)"Data/textures/rock_normal.tga"));
 	pRockMaterial->SetShader(shaderProg);
 	cube->SetMaterial((string)"Rock");
 

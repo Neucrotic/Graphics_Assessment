@@ -15,6 +15,7 @@ public:
 	{
 		glm::vec4 position;
 		glm::vec4 colour;
+		glm::vec2 uv;
 	};
 
 	Renderable();

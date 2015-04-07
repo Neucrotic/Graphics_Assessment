@@ -11,6 +11,7 @@ out vec3 vTangent;
 out vec3 vBiTangent;
 
 uniform mat4 ProjectionView;
+uniform mat4 World;
 
 void main()
 {
@@ -19,5 +20,5 @@ void main()
 	vTangent = Tangent.xyz;
 	vBiTangent = cross(vNormal, vTangent);
 	
-	gl_Position = ProjectionView * Position;
+	gl_Position = ProjectionView * World * Position;
 }

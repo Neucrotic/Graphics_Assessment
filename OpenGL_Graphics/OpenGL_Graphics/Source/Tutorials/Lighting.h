@@ -2,6 +2,8 @@
 #include "Engine/Application.h"
 #include "FBXFile.h"
 
+class ObjectMesh;
+
 class Lighting : public Application
 {
 public:
