@@ -16,7 +16,7 @@ uniform float lifeMin;
 uniform float lifeMax;
 uniform vec3 emitterPosition;
 
-const flat INVERSE_MAX_UNIT = 1.0f / 4294967295.0f;
+const float INVERSE_MAX_UINT = 1.0f / 4294967295.0f;
 
 float praiseRNGesus(uint seed, float range)
 {
@@ -38,11 +38,11 @@ void main()
 	//emit a new particle when one does
 	if (lifetime > lifespan)
 	{
-		uint pSeed = uint(time * 1000.0) + uint(gl_VertexID);
-		position.x = praiseRNGesus(pSeed++, 2) - 1;
-		position.y = praiseRNGesus(pSeed++, 2) - 1;
-		position.z = praiseRNGesus(pSeed++, 2) - 1;
-		position = normalize(position);
+		//uint pSeed = uint(time * 1000.0) + uint(gl_VertexID);
+		//position.x = praiseRNGesus(pSeed++, 2) - 1;
+		//position.y = praiseRNGesus(pSeed++, 2) - 1;
+		//position.z = praiseRNGesus(pSeed++, 2) - 1;
+		//position = normalize(position);
 	
 		uint seed = uint(time * 1000.0) + uint(gl_VertexID);		
 		velocity.x = praiseRNGesus(seed++, 2) - 1;

@@ -16,7 +16,7 @@ uniform float lifeMin;
 uniform float lifeMax;
 uniform vec3 emitterPosition;
 
-const flat INVERSE_MAX_UNIT = 1.0f / 4294967295.0f;
+const float INVERSE_MAX_UINT = 1.0f / 4294967295.0f;
 
 float praiseRNGesus(uint seed, float range)
 {

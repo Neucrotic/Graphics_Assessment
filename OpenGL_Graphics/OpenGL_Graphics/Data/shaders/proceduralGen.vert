@@ -4,7 +4,7 @@ layout(location=0) in vec4 position;
 layout(location=1) in vec4 colour;
 layout(location=2) in vec2 texcoord;
 
-uniform mat4 viewProjection;
+uniform mat4 ProjectionView;
 uniform sampler2D perlinTexture;
 
 out vec2 fragTexcoord;
@@ -12,8 +12,8 @@ out vec2 fragTexcoord;
 void main()
 {
 	vec4 pos = position;
-	pos.y += texture(perlinTexture, texcoord).r * 10;
+	pos.y += texture(perlinTexture, texcoord).r * 5;
 
 	fragTexcoord = texcoord;
-	gl_Position = viewProjection * pos;
+	gl_Position = ProjectionView * position;
 }

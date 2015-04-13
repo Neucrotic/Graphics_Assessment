@@ -6,8 +6,8 @@ layout(triangle_strip, max_vertices = 4) out;
 
 //from vert shader
 in vec3 position[];
-int float lifetime[];
-int float lifespan[];
+in float lifetime[];
+in float lifespan[];
 
 //to frag
 out vec4 Colour;

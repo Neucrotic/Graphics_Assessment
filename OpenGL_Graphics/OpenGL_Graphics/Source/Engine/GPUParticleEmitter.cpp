@@ -100,33 +100,14 @@ void GPUParticleEmitter::CreateBuffers()
 
 void GPUParticleEmitter::CreateUpdateShader(const char* _updateShader)
 {
-	unsigned int vs = ShaderHandler::Get()->LoadShader((string)"UpdateShader", _updateShader); //shaderLoader->LoadShader(GL_VERTEX_SHADER, _updateShader);
-
-	updateShader = glCreateProgram();
-	glAttachShader(updateShader, vs);
+	unsigned int updateShader = ShaderHandler::Get()->LoadShader((string)"UpdateShader", _updateShader);
 
 	//specify the data we will stream back in, this must be done in order
 	const char* variants[] = { "position", "velocity", "lifetime", "lifespan" };
 
 	glTransformFeedbackVaryings(updateShader, 4, variants, GL_INTERLEAVED_ATTRIBS);
 
-	glLinkProgram(updateShader);
-
-	int success = false;
-	glGetProgramiv(updateShader, GL_LINK_STATUS, &success);
-	if (success == GL_FALSE)
-	{
-		int infoLogLength = 0;
-		glGetProgramiv(updateShader, GL_INFO_LOG_LENGTH, &infoLogLength);
-		char* infoLog = new char[infoLogLength];
-		glGetProgramInfoLog(updateShader, infoLogLength, 0, infoLog);
-		printf("Error: Failed to link shader program!\n");
-		printf("%s\n", infoLog);
-		delete[] infoLog;
-	}
-
-	//removing unneeded handles
-	glDeleteShader(vs);
+	//glLinkProgram(updateShader);
 
 	//binding the shader so we can set uniforms that will remain constant
 	glUseProgram(updateShader);
@@ -139,19 +120,6 @@ void GPUParticleEmitter::CreateUpdateShader(const char* _updateShader)
 void GPUParticleEmitter::CreateDrawShader()
 {
 	drawShader = ShaderHandler::Get()->LoadShader((string)"DrawShader", "Data/shaders/GPUparticle.vert", "Data/shaders/GPUparticle.frag", "Data/shaders/GPUparticle.geom");
-
-	int success = false;
-	glGetProgramiv(drawShader, GL_LINK_STATUS, &success);
-	if (success == GL_FALSE)
-	{
-		int infoLogLength = 0;
-		glGetProgramiv(drawShader, GL_INFO_LOG_LENGTH, &infoLogLength);
-		char* infoLog = new char[infoLogLength];
-		glGetProgramInfoLog(drawShader, infoLogLength, 0, infoLog);
-		printf("Error: Failed to link shader program!\n");
-		printf("%s\n", infoLog);
-		delete[] infoLog;
-	}
 
 	//binding shader so we can set uniforms that wont change per-frame
 	glUseProgram(drawShader);

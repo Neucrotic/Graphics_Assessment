@@ -1,5 +1,6 @@
 #include "ProceduralGen.h"
 #include "Engine\MobileCamera.h"
+#include "Engine\ShaderHandler.h"
 
 bool ProceduralGen::Startup()
 {
@@ -8,6 +9,10 @@ bool ProceduralGen::Startup()
 	camera->SetupPerspective(glm::pi<float>() * 0.25f, 16.0f / 9.0f, 0.1f, 10000.0f);
 	camera->LookAt(glm::vec3(100, 100, 100), glm::vec3(0, 0, 0), glm::vec3(0, 1, 0));
 	m_camera = camera;
+
+	GenerateHeightMap(64, 64);
+
+	shaderProg = ShaderHandler::Get()->LoadShader((string)"GridShader", "Data/shaders/proceduralGen.vert", "Data/shaders/proceduralGen.frag");
 
 	return true;
 }
@@ -26,8 +31,24 @@ bool ProceduralGen::Update(double _dt)
 
 void ProceduralGen::Render()
 {
+	glUseProgram(shaderProg);
+
+	int location = glGetUniformLocation(shaderProg, "ProjectionView");
+	glUniformMatrix4fv(location, 1, false, glm::value_ptr(m_camera->GetProjectionView()));
+	/*
+	location = glGetUniformLocation(shaderProg, "texcoord");
+	glUniform1i(location, 0);
+
+	location = glGetUniformLocation(shaderProg, "perlinTexture");
+	glUniform1i(location, 0);*/
+
+	glBindVertexArray(buffers->VAO);
+	//glActiveTexture(GL_TEXTURE0);
+	//glBindTexture(GL_TEXTURE_2D, perlinTexture);
+
 	unsigned int indexCount = (gridRows - 1) * (gridColumns - 1) * 6;
 	glDrawElements(GL_TRIANGLES, indexCount, GL_UNSIGNED_INT, 0);
+	glBindVertexArray(0);
 }
 
 void ProceduralGen::GenerateHeightMap(int _rows, int _cols)
@@ -118,8 +139,26 @@ void ProceduralGen::GenerateHeightMap(int _rows, int _cols)
 float* ProceduralGen::GeneratePerlinData(int _dims, int _scale)
 {
 	float* perlinData = new float[_dims * _dims];
+	float scale = (1.0f / _dims) * _scale;
+	float octaves = 6;
 
+	for (int x = 0; x < _dims; ++x)
+	{
+		for (int y = 0; y < _dims; ++y)
+		{
+			float amplitude = 1.0f;
+			float persistance = 0.3f;
 
+			for (int o = 0; o < octaves; ++o)
+			{
+				float freq = powf(2, (float)o);
+				float perlinSample = glm::perlin(glm::vec2((float)x, (float)y) * scale * freq) * 0.5f + 0.5f;
+
+				perlinData[y * _dims + x] += perlinSample * amplitude;
+				amplitude *= persistance;
+			}
+		}
+	}
 
 	return perlinData;
 }

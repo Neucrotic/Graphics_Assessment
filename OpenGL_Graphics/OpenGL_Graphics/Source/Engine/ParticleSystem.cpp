@@ -18,7 +18,7 @@ bool ParticleSystem::Startup()
 	grassEmitter = new GPUParticleEmitter();
 	grassEmitter->Init(3000, 0.5f, 1.0f, 0.5f, 1.0f, 1.0f, 0.5f, glm::vec4(0, 1, 0, 1), glm::vec4(0, 0.75, 0, 1));
 	grassEmitter->CreateUpdateShader("Data/shaders/GPUparticleUpdateGrass.vert");
-	grassEmitter->SetOrigin(glm::vec3(-10, 0, -10));
+	//grassEmitter->SetOrigin(glm::vec3(-10, 0, -10));
 
 	rainEmitter = new GPUParticleEmitter();
 	rainEmitter->Init(50, 1.5f, 1.0f, -800, -1000, 1, 0.5, glm::vec4(0, 0, 0.5f, 1), glm::vec4(0, 0, 1, 1));
@@ -27,9 +27,9 @@ bool ParticleSystem::Startup()
 
 	cloudEmitter = new GPUParticleEmitter();
 	cloudEmitter->Init(2000, 0.5f, 1.0f, 0.25f, 0.5f, 1.0f, 0.5f, glm::vec4(1, 1, 1, 1), glm::vec4(0.5f, 0.5f, 0.5f, 0));
-	cloudEmitter->CreateUpdateShader("Data/shaders/GPUparticleUpdateCloud.vert");
+	cloudEmitter->CreateUpdateShader("Data/shaders/GPUparticleUpdateClouds.vert");
 	cloudEmitter->SetOrigin(glm::vec3(-10, 10, -10));
-
+	
 	return true;
 }
 

@@ -43,9 +43,9 @@ private:
 	unsigned char* FileToBuffer(const char* _name); //uses usigned char to give ASCII values 0-255
 	unsigned int CreateProgram(unsigned int _vertShader, 
 							   unsigned int _fragShader,
-							   unsigned int _tesselControlShader = 0, 
+							   unsigned int _geomShader = 0, 
 							   unsigned int _tesselEvalShader = 0, 
-							   unsigned int _geomShader = 0);
+							   unsigned int _tesselControlShader = 0);
 
 	map<string, unsigned int> shaderMap;
 

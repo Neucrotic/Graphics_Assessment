@@ -77,7 +77,7 @@ unsigned int ShaderHandler::LoadShader(std::string& _shaderName,
 		GLuint tes = LoadShader(_tessellationEvaluationShader, GL_TESS_EVALUATION_SHADER);
 	}
 	
-	unsigned int shaderID = CreateProgram(vs, fs, gs, tcs, tes);
+	unsigned int shaderID = CreateProgram(vs, fs, gs, tes, tcs);
 	shaderMap[_shaderName] = shaderID;
 
 	return shaderID;
@@ -237,9 +237,9 @@ unsigned char* ShaderHandler::FileToBuffer(const char* _name)
 
 unsigned int ShaderHandler::CreateProgram(GLuint _vertShader,
 	GLuint _fragShader,
-	GLuint _tesselControlShader,
+	GLuint _geomShader,
 	GLuint _tesselEvalShader,
-	GLuint _geomShader)
+	GLuint _tesselControlShader)
 {
 	int success = GL_FALSE;
 
