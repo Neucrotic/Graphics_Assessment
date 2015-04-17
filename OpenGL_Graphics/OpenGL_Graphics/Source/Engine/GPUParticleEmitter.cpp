@@ -54,7 +54,6 @@ void GPUParticleEmitter::Init(unsigned int _maxParticles,
 	activeBuffer = 0;
 
 	CreateBuffers();
-	//CreateUpdateShader();
 	CreateDrawShader();
 }
 
@@ -100,7 +99,7 @@ void GPUParticleEmitter::CreateBuffers()
 
 void GPUParticleEmitter::CreateUpdateShader(const char* _updateShader)
 {
-	unsigned int updateShader = ShaderHandler::Get()->LoadShader((string)"UpdateShader", _updateShader);
+	updateShader = ShaderHandler::Get()->LoadShader((string)"UpdateShader", _updateShader);
 
 	//specify the data we will stream back in, this must be done in order
 	const char* variants[] = { "position", "velocity", "lifetime", "lifespan" };

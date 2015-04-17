@@ -35,16 +35,14 @@ void ProceduralGen::Render()
 
 	int location = glGetUniformLocation(shaderProg, "ProjectionView");
 	glUniformMatrix4fv(location, 1, false, glm::value_ptr(m_camera->GetProjectionView()));
-	/*
-	location = glGetUniformLocation(shaderProg, "texcoord");
-	glUniform1i(location, 0);
+
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, perlinTexture);
 
 	location = glGetUniformLocation(shaderProg, "perlinTexture");
-	glUniform1i(location, 0);*/
+	glUniform1i(location, 0);
 
 	glBindVertexArray(buffers->VAO);
-	//glActiveTexture(GL_TEXTURE0);
-	//glBindTexture(GL_TEXTURE_2D, perlinTexture);
 
 	unsigned int indexCount = (gridRows - 1) * (gridColumns - 1) * 6;
 	glDrawElements(GL_TRIANGLES, indexCount, GL_UNSIGNED_INT, 0);
@@ -87,7 +85,7 @@ void ProceduralGen::GenerateHeightMap(int _rows, int _cols)
 		}
 	}
 
-	////generating perlin data
+	//generating perlin data
 	float* perlinData = GeneratePerlinData(64, 8);
 
 	//generating noise texture
@@ -116,8 +114,8 @@ void ProceduralGen::GenerateHeightMap(int _rows, int _cols)
 	glEnableVertexAttribArray(1);
 	glEnableVertexAttribArray(2);
 	glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), 0);
-	glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)(sizeof(glm::vec4)));
-	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)(sizeof(glm::vec4) + sizeof(glm::vec4)));
+	glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, colour));
+	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, uv));
 
 	//binding and filling IBO
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, buffers->IBO);
@@ -139,6 +137,7 @@ void ProceduralGen::GenerateHeightMap(int _rows, int _cols)
 float* ProceduralGen::GeneratePerlinData(int _dims, int _scale)
 {
 	float* perlinData = new float[_dims * _dims];
+
 	float scale = (1.0f / _dims) * _scale;
 	float octaves = 6;
 
@@ -148,6 +147,7 @@ float* ProceduralGen::GeneratePerlinData(int _dims, int _scale)
 		{
 			float amplitude = 1.0f;
 			float persistance = 0.3f;
+			perlinData[y * _dims + x] = 0;
 
 			for (int o = 0; o < octaves; ++o)
 			{

@@ -11,14 +11,11 @@ bool ParticleSystem::Startup()
 	camera->LookAt(glm::vec3(10, 10, 10), glm::vec3(0, 0, 0), glm::vec3(0, 1, 0));
 	m_camera = camera;
 
-	//emitter = new ParticleEmitter();
-	//emitter->Init(1000, 500, 0.1f, 1.0f, 1, 5, 1, 0.1f, glm::vec4(1, 0, 0, 1), glm::vec4(1, 1, 0, 1));
-
 	//loop through array and initiliaze emitters
 	grassEmitter = new GPUParticleEmitter();
 	grassEmitter->Init(3000, 0.5f, 1.0f, 0.5f, 1.0f, 1.0f, 0.5f, glm::vec4(0, 1, 0, 1), glm::vec4(0, 0.75, 0, 1));
 	grassEmitter->CreateUpdateShader("Data/shaders/GPUparticleUpdateGrass.vert");
-	//grassEmitter->SetOrigin(glm::vec3(-10, 0, -10));
+	grassEmitter->SetOrigin(glm::vec3(-10, 0, -10));
 
 	rainEmitter = new GPUParticleEmitter();
 	rainEmitter->Init(50, 1.5f, 1.0f, -800, -1000, 1, 0.5, glm::vec4(0, 0, 0.5f, 1), glm::vec4(0, 0, 1, 1));

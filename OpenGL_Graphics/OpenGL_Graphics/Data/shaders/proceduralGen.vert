@@ -15,5 +15,5 @@ void main()
 	pos.y += texture(perlinTexture, texcoord).r * 5;
 
 	fragTexcoord = texcoord;
-	gl_Position = ProjectionView * position;
+	gl_Position = ProjectionView * pos;
 }

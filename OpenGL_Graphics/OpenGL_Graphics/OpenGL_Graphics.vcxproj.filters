@@ -72,6 +72,9 @@
     <ClCompile Include="Source\Tutorials\ProceduralGen.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Scene.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\DefaultMeshes\CubeMesh.h">
@@ -137,6 +140,12 @@
     <ClInclude Include="Source\Tutorials\ProceduralGen.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Dependincies\AntTweakBar\include\AntTweakBar.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Scene.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Data\shaders\advTexture.frag" />
@@ -153,16 +162,16 @@
     <None Include="Data\shaders\GPUparticleUpdateClouds.vert" />
     <None Include="Data\shaders\GPUparticleUpdateGrass.vert" />
     <None Include="Data\shaders\GPUparticleUpdateRain.vert" />
+    <None Include="Dependincies\AntTweakBar\lib\AntTweakBar.dll" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Data\textures\rock_diffuse.tga" />
     <Image Include="Data\textures\rock_normal.tga" />
   </ItemGroup>
   <ItemGroup>
-    <Library Include="Dependincies\FBXLoader\FBXLoader.lib" />
-    <Library Include="Dependincies\FBXLoader\FBXLoader_d.lib" />
     <Library Include="Dependincies\glfw\lib-vc2013\glfw3.lib" />
     <Library Include="Dependincies\glfw\lib-vc2013\glfw3dll.lib" />
+    <Library Include="Dependincies\AntTweakBar\lib\AntTweakBar.lib" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="Dependincies\glm\CMakeLists.txt" />

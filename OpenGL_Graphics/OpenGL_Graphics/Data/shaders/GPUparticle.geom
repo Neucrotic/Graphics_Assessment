@@ -23,7 +23,7 @@ void main()
 {
 	Colour = mix(colourStart, colourEnd, lifetime[0] / lifespan[0]); //interpolates colour
 	
-	float halfSize = mix(sizeStart, sizeEnd, lifetime[0]/lifespan[0]) * 0.5f;
+	float halfSize = mix(sizeStart, sizeEnd, lifetime[0] / lifespan[0]) * 0.5f;
 	
 	vec3 corners[4];
 	corners[0] = vec3(halfSize, -halfSize, 0);

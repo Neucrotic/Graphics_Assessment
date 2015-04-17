@@ -52,13 +52,13 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>GLM_SWIZZLE;GLM_FORCE_PURE;WIN32;_DEBUG;_CONSOLE;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(ProjectDir)Source\;$(ProjectDir)Dependincies\glm\;$(ProjectDir)Dependincies\glfw\include\;$(ProjectDir)Dependincies\TinyObj\;$(ProjectDir)Dependincies\FBXLoader\;$(ProjectDir)Dependincies\stb-master\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)Source\;$(ProjectDir)Dependincies\glm\;$(ProjectDir)Dependincies\glfw\include\;$(ProjectDir)Dependincies\TinyObj\;$(ProjectDir)Dependincies\FBXLoader\;$(ProjectDir)Dependincies\stb-master\;$(ProjectDir)Dependincies\AntTweakBar\include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(ProjectDir)\Dependincies\glfw\lib-vc2013;$(ProjectDir)\Dependincies\FBXLoader\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>opengl32.lib;glfw3.lib;FBXLoader_d.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(ProjectDir)\Dependincies\glfw\lib-vc2013;$(ProjectDir)\Dependincies\FBXLoader\;$(ProjectDir)Dependincies\AntTweakBar\lib\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>opengl32.lib;glfw3.lib;FBXLoader_d.lib;AntTweakBar.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -95,11 +95,13 @@
     <ClCompile Include="Source\Gizmos_Fix.cpp" />
     <ClCompile Include="Source\gl_core_4_4.c" />
     <ClCompile Include="Source\main.cpp" />
+    <ClCompile Include="Source\Scene.cpp" />
     <ClCompile Include="Source\Tutorials\AdvTexture.cpp" />
     <ClCompile Include="Source\Tutorials\Lighting.cpp" />
     <ClCompile Include="Source\Tutorials\ProceduralGen.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Dependincies\AntTweakBar\include\AntTweakBar.h" />
     <ClInclude Include="Dependincies\FBXLoader\FBXFile.h" />
     <ClInclude Include="Dependincies\stb-master\stb_image.h" />
     <ClInclude Include="Dependincies\TinyObj\tiny_obj_loader.h" />
@@ -118,6 +120,7 @@
     <ClInclude Include="Source\Engine\TextureLoader.h" />
     <ClInclude Include="Source\Gizmos_Fix.h" />
     <ClInclude Include="Source\gl_core_4_4.h" />
+    <ClInclude Include="Source\Scene.h" />
     <ClInclude Include="Source\Tutorials\AdvTexture.h" />
     <ClInclude Include="Source\Tutorials\Lighting.h" />
     <ClInclude Include="Source\Tutorials\ProceduralGen.h" />
@@ -135,6 +138,7 @@
     <None Include="Data\shaders\lighting.vert" />
     <None Include="Data\shaders\proceduralGen.frag" />
     <None Include="Data\shaders\proceduralGen.vert" />
+    <None Include="Dependincies\AntTweakBar\lib\AntTweakBar.dll" />
     <None Include="Dependincies\glfw\lib-vc2013\glfw3.dll" />
     <None Include="Dependincies\glm\CTestConfig.cmake" />
   </ItemGroup>
@@ -143,8 +147,7 @@
     <Image Include="Data\textures\rock_normal.tga" />
   </ItemGroup>
   <ItemGroup>
-    <Library Include="Dependincies\FBXLoader\FBXLoader.lib" />
-    <Library Include="Dependincies\FBXLoader\FBXLoader_d.lib" />
+    <Library Include="Dependincies\AntTweakBar\lib\AntTweakBar.lib" />
     <Library Include="Dependincies\glfw\lib-vc2013\glfw3.lib" />
     <Library Include="Dependincies\glfw\lib-vc2013\glfw3dll.lib" />
   </ItemGroup>

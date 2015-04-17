@@ -4,6 +4,7 @@
 #include <GLFW/glfw3.h>
 #include <glm/glm.hpp>
 #include <glm/ext.hpp>
+#include "AntTweakBar.h"
 
 using namespace std;
 
@@ -40,10 +41,15 @@ protected:
 	inline unsigned int GetScreenWidth() const { return screenWidth; }
 	inline unsigned int GetScreenHeight() const { return screenHeight; }
 
+	//variables for editing aspect of the world within a scene
+	float editAmplitude;
+	float editPersistance;
+
 	string appName;
 	GLFWwindow* window;
 	Buffers* buffers;
 	Camera* m_camera;
+	TwBar* tweakBar;
 
 private:
 

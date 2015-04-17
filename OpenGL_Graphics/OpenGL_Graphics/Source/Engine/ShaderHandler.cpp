@@ -57,24 +57,25 @@ unsigned int ShaderHandler::LoadShader(std::string& _shaderName,
 	GLuint tcs = 0;
 	GLuint tes = 0;
 
+
 	if (_pixelShader != nullptr)
 	{
-		GLuint fs = LoadShader(_pixelShader, GL_FRAGMENT_SHADER);
+		fs = LoadShader(_pixelShader, GL_FRAGMENT_SHADER);
 	}
 
 	if (_geomertyShader != nullptr)
 	{
-		GLuint gs = LoadShader(_geomertyShader, GL_GEOMETRY_SHADER);
+		gs = LoadShader(_geomertyShader, GL_GEOMETRY_SHADER);
 	}
 	
 	if (_tessellationControlShader != nullptr)
 	{
-		GLuint tcs = LoadShader(_tessellationControlShader, GL_TESS_CONTROL_SHADER);
+		tcs = LoadShader(_tessellationControlShader, GL_TESS_CONTROL_SHADER);
 	}
 
 	if (_tessellationEvaluationShader != nullptr)
 	{
-		GLuint tes = LoadShader(_tessellationEvaluationShader, GL_TESS_EVALUATION_SHADER);
+		tes = LoadShader(_tessellationEvaluationShader, GL_TESS_EVALUATION_SHADER);
 	}
 	
 	unsigned int shaderID = CreateProgram(vs, fs, gs, tes, tcs);
