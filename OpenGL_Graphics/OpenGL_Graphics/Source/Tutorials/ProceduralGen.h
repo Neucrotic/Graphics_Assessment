@@ -2,16 +2,18 @@
 #include "Engine/Application.h"
 #include <vector>
 
-struct Vertex
-{
-	glm::vec4 position;
-	glm::vec4 colour;
-	glm::vec2 uv;
-};
+
 
 class ProceduralGen : public Application
 {
 public:
+
+struct Vertex
+	{
+		glm::vec4 position;
+		glm::vec4 colour;
+		glm::vec2 uv;
+	};
 
 	bool Startup();
 	void Shutdown();

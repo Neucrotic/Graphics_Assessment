@@ -128,6 +128,8 @@
   <ItemGroup>
     <None Include="Data\shaders\advTexture.frag" />
     <None Include="Data\shaders\advTexture.vert" />
+    <None Include="Data\shaders\bluePlane.frag" />
+    <None Include="Data\shaders\bluePlane.vert" />
     <None Include="Data\shaders\GPUparticle.frag" />
     <None Include="Data\shaders\GPUparticle.geom" />
     <None Include="Data\shaders\GPUparticle.vert" />

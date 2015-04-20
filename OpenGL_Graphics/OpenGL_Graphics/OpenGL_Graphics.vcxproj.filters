@@ -163,6 +163,8 @@
     <None Include="Data\shaders\GPUparticleUpdateGrass.vert" />
     <None Include="Data\shaders\GPUparticleUpdateRain.vert" />
     <None Include="Dependincies\AntTweakBar\lib\AntTweakBar.dll" />
+    <None Include="Data\shaders\bluePlane.frag" />
+    <None Include="Data\shaders\bluePlane.vert" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Data\textures\rock_diffuse.tga" />

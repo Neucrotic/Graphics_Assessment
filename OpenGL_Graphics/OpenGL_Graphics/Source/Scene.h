@@ -1,5 +1,13 @@
 #pragma once
 #include "Engine/Application.h"
+#include "AntTweakBar.h"
+
+struct Vertex
+{
+	glm::vec4 position;
+	glm::vec4 colour;
+	glm::vec2 uv;
+};
 
 class Scene : public Application
 {
@@ -12,21 +20,30 @@ public:
 
 private:
 
-	//tweak bar variables
+	//tweak bar properties
 	TwBar* tweakBar;
 	float editAmplitude;
-	float editPersistance;
+	float editScale;
+	bool barChanged;
+	float oldAmp;
+	float oldPers;
 
-	//variables used for Procedural Generation
+	//properties used for Procedural Generation
 	unsigned int terrainShader;
+	unsigned int planeShader;
 	int gridRows;
 	int gridColumns;
 	unsigned int perlinTexture;
+	unsigned int planeTexture;
+		
+	float* GeneratePerlinData(int _dims, int _scale, float _amplitude);
+	void GenerateTerrain(int _dimensions, int _terrScale, float _terrAmplitude);
+	void CreatePlane(int _dimensions);
 
-	//variables used for Particles
+	//properties used for Particles
 
 
-	//variables used for Objs
+	//properties used for Objs
 
 
 };

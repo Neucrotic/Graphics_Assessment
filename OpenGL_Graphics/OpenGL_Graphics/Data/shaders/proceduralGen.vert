@@ -8,12 +8,13 @@ uniform mat4 ProjectionView;
 uniform sampler2D perlinTexture;
 
 out vec2 fragTexcoord;
+out vec4 fragPos;
 
 void main()
 {
-	vec4 pos = position;
-	pos.y += texture(perlinTexture, texcoord).r * 5;
+	fragPos = position;
+	fragPos.y += texture(perlinTexture, texcoord).r * 5;
 
 	fragTexcoord = texcoord;
-	gl_Position = ProjectionView * pos;
+	gl_Position = ProjectionView * fragPos;
 }

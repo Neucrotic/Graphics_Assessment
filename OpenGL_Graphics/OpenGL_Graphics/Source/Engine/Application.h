@@ -4,7 +4,7 @@
 #include <GLFW/glfw3.h>
 #include <glm/glm.hpp>
 #include <glm/ext.hpp>
-#include "AntTweakBar.h"
+//#include "AntTweakBar.h"
 
 using namespace std;
 
@@ -49,7 +49,6 @@ protected:
 	GLFWwindow* window;
 	Buffers* buffers;
 	Camera* m_camera;
-	TwBar* tweakBar;
 
 private:
 

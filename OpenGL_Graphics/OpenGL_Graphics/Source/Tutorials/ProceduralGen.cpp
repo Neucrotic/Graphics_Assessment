@@ -145,7 +145,7 @@ float* ProceduralGen::GeneratePerlinData(int _dims, int _scale)
 	{
 		for (int y = 0; y < _dims; ++y)
 		{
-			float amplitude = 1.0f;
+			float amplitude = 2.0f;
 			float persistance = 0.3f;
 			perlinData[y * _dims + x] = 0;
 
