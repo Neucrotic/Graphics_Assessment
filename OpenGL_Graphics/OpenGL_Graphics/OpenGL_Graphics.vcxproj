@@ -57,7 +57,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(ProjectDir)\Dependincies\glfw\lib-vc2013;$(ProjectDir)\Dependincies\FBXLoader\;$(ProjectDir)Dependincies\AntTweakBar\lib\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(ProjectDir)\Dependincies\glfw\lib-vc2013\;$(ProjectDir)\Dependincies\FBXLoader\;$(ProjectDir)Dependincies\AntTweakBar\lib\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>opengl32.lib;glfw3.lib;FBXLoader_d.lib;AntTweakBar.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
@@ -103,6 +103,7 @@
   <ItemGroup>
     <ClInclude Include="Dependincies\AntTweakBar\include\AntTweakBar.h" />
     <ClInclude Include="Dependincies\FBXLoader\FBXFile.h" />
+    <ClInclude Include="Dependincies\glfw\include\GLFW\glfw3.h" />
     <ClInclude Include="Dependincies\stb-master\stb_image.h" />
     <ClInclude Include="Dependincies\TinyObj\tiny_obj_loader.h" />
     <ClInclude Include="Source\DefaultMeshes\CubeMesh.h" />
@@ -150,6 +151,7 @@
   </ItemGroup>
   <ItemGroup>
     <Library Include="Dependincies\AntTweakBar\lib\AntTweakBar.lib" />
+    <Library Include="Dependincies\FBXLoader\FBXLoader_d.lib" />
     <Library Include="Dependincies\glfw\lib-vc2013\glfw3.lib" />
     <Library Include="Dependincies\glfw\lib-vc2013\glfw3dll.lib" />
   </ItemGroup>

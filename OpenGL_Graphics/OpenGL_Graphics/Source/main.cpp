@@ -7,6 +7,6 @@
 
 void main()
 {
-	Scene* app = new Scene();
+	ParticleSystem* app = new ParticleSystem();
 	app->Run();
 }

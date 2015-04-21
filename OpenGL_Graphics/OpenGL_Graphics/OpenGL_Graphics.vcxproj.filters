@@ -146,6 +146,9 @@
     <ClInclude Include="Source\Scene.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Dependincies\glfw\include\GLFW\glfw3.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Data\shaders\advTexture.frag" />
@@ -174,6 +177,7 @@
     <Library Include="Dependincies\glfw\lib-vc2013\glfw3.lib" />
     <Library Include="Dependincies\glfw\lib-vc2013\glfw3dll.lib" />
     <Library Include="Dependincies\AntTweakBar\lib\AntTweakBar.lib" />
+    <Library Include="Dependincies\FBXLoader\FBXLoader_d.lib" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="Dependincies\glm\CMakeLists.txt" />
