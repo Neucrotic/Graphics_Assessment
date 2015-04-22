@@ -7,6 +7,6 @@
 
 void main()
 {
-	ParticleSystem* app = new ParticleSystem();
+	ProceduralGen* app = new ProceduralGen();
 	app->Run();
 }

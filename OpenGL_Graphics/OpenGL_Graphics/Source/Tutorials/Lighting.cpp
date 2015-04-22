@@ -11,7 +11,7 @@ bool Lighting::Startup()
 	m_camera = camera;
 
 	fbxModel = new FBXFile();
-	//fbxModel->load("Data/objects/Bunny.obj");
+	fbxModel->load("Data/objects/Bunny.obj");
 
 	CreateShaders();
 	CreateOpenGLBuffers(fbxModel);
@@ -53,7 +53,7 @@ void Lighting::Render()
 
 
 
-	/*for (unsigned int i = 0; i < fbxModel->getMeshCount(); ++i)
+	for (unsigned int i = 0; i < fbxModel->getMeshCount(); ++i)
 	{
 		FBXMeshNode* mesh = fbxModel->getMeshByIndex(i);
 
@@ -61,7 +61,7 @@ void Lighting::Render()
 
 		glBindVertexArray(glData[0]);
 		glDrawElements(GL_TRIANGLES, (unsigned int)mesh->m_indices.size(), GL_UNSIGNED_INT, 0);
-	}*/
+	}
 }
 
 void Lighting::CreateShaders()

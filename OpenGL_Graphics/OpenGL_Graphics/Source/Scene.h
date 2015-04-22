@@ -52,7 +52,7 @@ private:
 	GPUParticleEmitter* cloudEmitter;
 	GPUParticleEmitter* rainEmitter;
 
-	//properties used for Objs
+	//properties used for FBX
 
 
 };
