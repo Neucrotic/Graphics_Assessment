@@ -20,12 +20,11 @@ const float INVERSE_MAX_UINT = 1.0f / 4294967295.0f;
 
 float praiseRNGesus(uint seed, float range)
 {
-	uint i = (seed ^ 12345391u) * 2654435769u;
-	i ^= (i << 6u) ^ (i >> 26u);
+	uint i = (seed ^12345391u) * 2654435769u;
+	i ^= (i << 6u) ^(i >> 26u);
 	i *= 2654435769u;
-	i += (i << 5u) ^ (i >> 12u);
-	
-	return float(range * i) * INVERSE_MAX_UINT; 
+	i += (i << 5u) ^(i >> 12u);
+	return float(range * i) * INVERSE_MAX_UINT;
 }
 
 void main()
@@ -35,23 +34,22 @@ void main()
 	lifetime = Lifetime + deltaTime;
 	lifespan = Lifespan;
 	
-	//emit a new particle when one does
+	//if the particle is dead emit a new one
 	if (lifetime > lifespan)
 	{
-		uint pSeed = uint(time * 1000.0) + uint(gl_VertexID);
-		position.x = praiseRNGesus(pSeed++, 2) - 1;
-		position.y = praiseRNGesus(pSeed++, 2) - 1;
-		position.z = praiseRNGesus(pSeed++, 2) - 1;
-		position = normalize(position);
-	
-		uint seed = uint(time * 1000.0) + uint(gl_VertexID);		
+		vec3 randPos;
+		uint posSeed = uint(time * 1000.0) + uint(gl_VertexID);
+		randPos.x = praiseRNGesus(posSeed++, 20);
+		randPos.y = 0;
+		randPos.z = praiseRNGesus(posSeed++, 20);
+		
+		uint seed = uint(time * 1000.0) + uint(gl_VertexID);
 		velocity.x = praiseRNGesus(seed++, 2) - 1;
 		velocity.y = praiseRNGesus(seed++, 2) - 1;
 		velocity.z = praiseRNGesus(seed++, 2) - 1;
 		velocity = normalize(velocity);
-		
-		position = emitterPosition;
+		position = emitterPosition + randPos;
 		lifetime = 0;
-		lifespan = praiseRNGesus(seed++, lifeMax - lifeMin); + lifeMin;
+		lifespan = praiseRNGesus(seed++, lifeMax - lifeMin) + lifeMin;
 	}
 }

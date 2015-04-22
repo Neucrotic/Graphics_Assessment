@@ -2,34 +2,6 @@
 #include "Engine\MobileCamera.h"
 #include "Engine\ShaderHandler.h"
 
-#pragma region TweakBar Overrides
-void OnMouseButton(GLFWwindow*, int b, int a, int m)
-{
-	TwEventMouseButtonGLFW(b, a);
-}
-void OnMousePosition(GLFWwindow*, double x, double y)
-{
-	TwEventMousePosGLFW((int)x, (int)y);
-}
-void OnMouseScroll(GLFWwindow*, double x, double y)
-{
-	TwEventMouseWheelGLFW((int)y);
-}
-void OnKey(GLFWwindow*, int k, int s, int a, int m)
-{
-	TwEventKeyGLFW(k, a);
-}
-void OnChar(GLFWwindow*, unsigned int c)
-{
-	TwEventCharGLFW(c, GLFW_PRESS);
-}
-void OnWindowResize(GLFWwindow*, int w, int h)
-{
-	TwWindowSize(w, h);
-	glViewport(0, 0, w, h);
-}
-#pragma endregion
-
 bool Scene::Startup()
 {
 	MobileCamera* camera = new MobileCamera(100.0f, 0.1f);
@@ -48,14 +20,14 @@ bool Scene::Startup()
 
 
 	//AntBar init
-	TwInit(TW_OPENGL_CORE, nullptr);
+	/*TwInit(TW_OPENGL_CORE, nullptr);
 	TwWindowSize(1280, 720);
 	glfwSetMouseButtonCallback(window, OnMouseButton);
 	glfwSetCursorPosCallback(window, OnMousePosition);
 	glfwSetScrollCallback(window, OnMouseScroll);
 	glfwSetKeyCallback(window, OnKey);
 	glfwSetCharCallback(window, OnChar);
-	glfwSetWindowSizeCallback(window, OnWindowResize);
+	glfwSetWindowSizeCallback(window, OnWindowResize);*/
 
 	tweakBar = TwNewBar("World_Editor");
 	TwAddVarRW(tweakBar, "Terrain Amplitude", TW_TYPE_FLOAT, &editAmplitude, "");

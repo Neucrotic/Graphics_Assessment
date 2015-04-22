@@ -2,6 +2,34 @@
 #include "Engine\MobileCamera.h"
 #include "Engine\ShaderHandler.h"
 
+#pragma region TweakBar Overrides
+void OnMouseButton(GLFWwindow*, int b, int a, int m)
+{
+	TwEventMouseButtonGLFW(b, a);
+}
+void OnMousePosition(GLFWwindow*, double x, double y)
+{
+	TwEventMousePosGLFW((int)x, (int)y);
+}
+void OnMouseScroll(GLFWwindow*, double x, double y)
+{
+	TwEventMouseWheelGLFW((int)y);
+}
+void OnKey(GLFWwindow*, int k, int s, int a, int m)
+{
+	TwEventKeyGLFW(k, a);
+}
+void OnChar(GLFWwindow*, unsigned int c)
+{
+	TwEventCharGLFW(c, GLFW_PRESS);
+}
+void OnWindowResize(GLFWwindow*, int w, int h)
+{
+	TwWindowSize(w, h);
+	glViewport(0, 0, w, h);
+}
+#pragma endregion
+
 bool ProceduralGen::Startup()
 {
 	MobileCamera* camera = new MobileCamera(100.0f, 0.1f);
@@ -10,7 +38,6 @@ bool ProceduralGen::Startup()
 	camera->LookAt(glm::vec3(100, 100, 100), glm::vec3(0, 0, 0), glm::vec3(0, 1, 0));
 	m_camera = camera;
 
-	//GenerateHeightMap(200, 200);
 	GenerateGrid(200, 200);
 	GenerateTerrain(200);
 
@@ -19,12 +46,51 @@ bool ProceduralGen::Startup()
 
 	grassTexture = LoadTexture("Data/textures/grass.jpg");
 	sandTexture = LoadTexture("Data/textures/sand.jpg");
-	rockTexture = LoadTexture("Data/textures/iceREPLACE.jpg");
 
-	fbxModel = new FBXFile();
-	fbxModel->load("Data/models/Bunny.fbx");
+	//initialize bunny
+	fbxBunny = new FBXFile();
+	fbxBunny->load("Data/models/Bunny.fbx");
+	CreateOpenGLBuffers(fbxBunny);
+	
+	//initialize dragon
+	fbxDragon = new FBXFile();
+	fbxDragon->load("Data/models/Dragon.fbx");
+	CreateOpenGLBuffers(fbxDragon);
 
-	CreateOpenGLBuffers(fbxModel);
+	//tweak bar init
+	TwInit(TW_OPENGL_CORE, nullptr);
+	TwWindowSize(1280, 720);
+	glfwSetMouseButtonCallback(window, OnMouseButton);
+	glfwSetCursorPosCallback(window, OnMousePosition);
+	glfwSetScrollCallback(window, OnMouseScroll);
+	glfwSetKeyCallback(window, OnKey);
+	glfwSetCharCallback(window, OnChar);
+	glfwSetWindowSizeCallback(window, OnWindowResize);
+
+	numRaindrops = 50;
+	rainSpeed = 1.0f;
+	seed = 5;
+	rainChanged = false;
+	speedChanged = false;
+	seedChanged = false;
+
+	gui = TwNewBar("World Editor");
+	TwAddVarRW(gui, "Terrain Seed", TW_TYPE_INT32, &seed, "");
+	TwAddVarRW(gui, "Rain Density", TW_TYPE_FLOAT, &numRaindrops, "");
+	TwAddVarRW(gui, "Rainfall Speed", TW_TYPE_FLOAT, &rainSpeed, "");
+	//property init
+	oldDrops = numRaindrops;
+	oldRSpeed = rainSpeed;
+	oldSeed = seed;
+
+	//particle emitter initilization
+	clouds = new GPUParticleEmitter();
+	clouds->Init(2000, 1.0f, 1.5f, 0.25f, 0.5f, 3.0f, 2.0f, glm::vec4(0.25f, 0.25f, 0.25f, 1), glm::vec4(0.25f, 0.25f, 0.25f, 0.5f));
+	clouds->CreateUpdateShader("Data/shaders/GPUparticleUpdateCloud.vert");
+
+	rain = new GPUParticleEmitter();
+	rain->Init(numRaindrops, 1.0f, 1.5f, (rainSpeed / 2), rainSpeed, 2.0f, 1.0f, glm::vec4(0, 0, 1, 1), glm::vec4(0, 0, 0.5f, 1));
+	rain->CreateUpdateShader("Data/shaders/GPUparticleUpdateRain.vert");
 
 	return true;
 }
@@ -36,14 +102,56 @@ float* ProceduralGen::GeneratePerlinData(int _dims, int _scale)
 
 void ProceduralGen::Shutdown()
 {
-	CleanupOpenGLBuffers(fbxModel);
+	//cleaning up fbx models
+	CleanupOpenGLBuffers(fbxBunny);
+	CleanupOpenGLBuffers(fbxDragon);
+
+	//LAST
+	TwDeleteAllBars();
+	TwTerminate();
 }
 
 bool ProceduralGen::Update(double _dt)
 {
+
+	//raindrop number changes
+	if (oldDrops != numRaindrops)
+	{
+		rainChanged = true;
+	}
+	oldDrops = numRaindrops;
+	if (rainChanged == true)
+	{
+		rain->Init(numRaindrops, 1.0f, 1.5f, (rainSpeed / 2), rainSpeed, 2.0f, 1.0f, glm::vec4(0, 0, 1, 1), glm::vec4(0, 0, 0.5f, 1));
+		rainChanged = false;
+	}
+
+	//randrop density changes
+	if (oldRSpeed != rainSpeed)
+	{
+		speedChanged = true;
+	}
+	oldRSpeed = rainSpeed;
+	if (speedChanged == true)
+	{
+		rain->Init(numRaindrops, 1.0f, 1.5f, (rainSpeed / 2), rainSpeed, 2.0f, 1.0f, glm::vec4(0, 0, 1, 1), glm::vec4(0, 0, 0.5f, 1));
+		speedChanged = false;
+	}
+
+	//seed changes
+	if (oldSeed != seed)
+	{
+		seedChanged = true;
+	}
+	oldSeed = seed;
+	if (seedChanged == true)
+	{
+		GenerateGrid(200, 200);
+		GenerateTerrain(200);
+		seedChanged = false;
+	}
+
 	m_camera->Update(_dt);
-
-
 
 	return true;
 }
@@ -70,12 +178,6 @@ void ProceduralGen::Render()
 	location = glGetUniformLocation(shaderProg, "SandTexture");
 	glUniform1i(location, 2);
 
-	glActiveTexture(GL_TEXTURE3);
-	glBindTexture(GL_TEXTURE_2D, rockTexture);
-	location = glGetUniformLocation(shaderProg, "SnowTexture");
-	glUniform1i(location, 3);
-
-
 	glBindVertexArray(buffers->VAO);
 
 	glDrawElements(GL_TRIANGLES, indexCount, GL_UNSIGNED_INT, 0);
@@ -86,15 +188,32 @@ void ProceduralGen::Render()
 	glUniformMatrix4fv(location, 1, false, glm::value_ptr(m_camera->GetProjectionView()));
 
 	//rendering the bunny
-	for (unsigned int i = 0; i < fbxModel->getMeshCount(); ++i)
+	for (unsigned int i = 0; i < fbxBunny->getMeshCount(); ++i)
 	{
-		FBXMeshNode* mesh = fbxModel->getMeshByIndex(i);
-
+		FBXMeshNode* mesh = fbxBunny->getMeshByIndex(i);
+	
 		unsigned int* glData = (unsigned int*)mesh->m_userData;
-
+	
 		glBindVertexArray(glData[0]);
 		glDrawElements(GL_TRIANGLES, (unsigned int)mesh->m_indices.size(), GL_UNSIGNED_INT, 0);
 	}
+	
+	//rendering the dragon
+	for (unsigned int i = 0; i < fbxDragon->getMeshCount(); ++i)
+	{
+		FBXMeshNode* mesh = fbxDragon->getMeshByIndex(i);
+	
+		unsigned int* glData = (unsigned int*)mesh->m_userData;
+	
+		glBindVertexArray(glData[0]);
+		glDrawElements(GL_TRIANGLES, (unsigned int)mesh->m_indices.size(), GL_UNSIGNED_INT, 0);
+	}
+
+	clouds->Draw((float)glfwGetTime(), m_camera->GetTransform(), m_camera->GetProjectionView());
+	rain->Draw((float)glfwGetTime(), m_camera->GetTransform(), m_camera->GetProjectionView());
+
+	//LAST
+	TwDraw();
 }
 
 int ProceduralGen::LoadTexture(std::string file)
@@ -128,91 +247,6 @@ int ProceduralGen::LoadTexture(std::string file)
 	return texture;
 
 	stbi_image_free(data);
-}
-
-void ProceduralGen::GenerateHeightMap(int _rows, int _cols)
-{
-	Vertex* vertices = new Vertex[_rows * _cols];
-	for (unsigned int r = 0; r < _rows; ++r)
-	{
-		for (unsigned int c = 0; c < _cols; ++c)
-		{
-			vertices[r * _cols + c].position = glm::vec4((float)c, 0, (float)r, 1);
-
-			glm::vec3 colour = glm::vec3(1, 1, 1);
-
-			vertices[r * _cols + c].normal = glm::vec4(colour, 1);
-			vertices[r * _cols + c].uv = glm::vec2((float)c / _cols, (float)r / _rows);
-		}
-	}
-
-	//defining index count based of quad count (2 tri's = 1 quad)
-	unsigned int* indices = new unsigned int[(_rows - 1) * (_cols - 1) * 6];
-	unsigned int index = 0;
-
-	for (unsigned int r = 0; r < (_rows - 1); ++r)
-	{
-		for (unsigned int c = 0; c < (_cols - 1); ++c)
-		{
-			//tri 1
-			indices[index++] = r * _cols + c;
-			indices[index++] = (r + 1) * _cols + c;
-			indices[index++] = (r + 1) * _cols + (c + 1);
-
-			//tri 2
-			indices[index++] = r * _cols + c;
-			indices[index++] = (r + 1) * _cols + (c + 1);
-			indices[index++] = r * _cols + (c + 1);
-		}
-	}
-
-	//generating perlin data
-	float* perlinData = GeneratePerlinData(200, 50);
-
-	//generating noise texture
-	glGenTextures(1, &perlinTexture);
-	glBindTexture(GL_TEXTURE_2D, perlinTexture);
-
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_R32F, 64, 64, 0, GL_RED, GL_FLOAT, perlinData);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-
-	//generating VAO, VBO and IBO
-	glGenBuffers(1, &buffers->VBO);
-	glGenBuffers(1, &buffers->IBO);
-
-	glGenVertexArrays(1, &buffers->VAO);
-	glBindVertexArray(buffers->VAO);
-
-	//binding and filling VBO
-	glBindBuffer(GL_ARRAY_BUFFER, buffers->VBO);
-	glBufferData(GL_ARRAY_BUFFER, (_rows * _cols) * sizeof(Vertex), vertices, GL_STATIC_DRAW);
-
-	glEnableVertexAttribArray(0);
-	glEnableVertexAttribArray(1);
-	glEnableVertexAttribArray(2);
-	glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), 0);
-	glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, normal));
-	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, uv));
-
-	//binding and filling IBO
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, buffers->IBO);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, (_rows - 1) * (_cols - 1) * 6 * sizeof(unsigned int), indices, GL_STATIC_DRAW);
-
-	//binding VAO
-	glBindVertexArray(0);
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-
-	//save function parametres for member varibles for external use
-	gridRows = _rows;
-	gridColumns = _cols;
-
-	delete[] vertices;
-	delete[] indices;
 }
 
 void ProceduralGen::GenerateTerrain(unsigned int rows)

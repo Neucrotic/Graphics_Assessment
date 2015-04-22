@@ -34,8 +34,7 @@ void GPUParticleEmitter::Init(unsigned int _maxParticles,
 	float _velocityMin, float _velocityMax,
 	float _startSize, float _endSize,
 	const glm::vec4& _startColour,
-	const glm::vec4& _endColour)
-{
+	const glm::vec4& _endColour){
 	//storing passed in varibles
 	startColour = _startColour;
 	endColour = _endColour;

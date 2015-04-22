@@ -136,7 +136,7 @@
     <None Include="Data\shaders\GPUparticle.frag" />
     <None Include="Data\shaders\GPUparticle.geom" />
     <None Include="Data\shaders\GPUparticle.vert" />
-    <None Include="Data\shaders\GPUparticleUpdateClouds.vert" />
+    <None Include="Data\shaders\GPUparticleUpdateCloud.vert" />
     <None Include="Data\shaders\GPUparticleUpdateGrass.vert" />
     <None Include="Data\shaders\GPUparticleUpdateRain.vert" />
     <None Include="Data\shaders\lighting.frag" />
@@ -152,7 +152,7 @@
   </ItemGroup>
   <ItemGroup>
     <Image Include="Data\textures\grass.jpg" />
-    <Image Include="Data\textures\iceREAPLCE .jpg" />
+    <Image Include="Data\textures\iceREPLACE .jpg" />
     <Image Include="Data\textures\rock_diffuse.tga" />
     <Image Include="Data\textures\rock_normal.tga" />
     <Image Include="Data\textures\sand.jpg" />

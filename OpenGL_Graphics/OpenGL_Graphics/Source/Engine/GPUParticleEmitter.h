@@ -23,6 +23,7 @@ protected:
 	ShaderLoader* shaderLoader;
 
 	GPUParticle* particles;
+	GPUParticle* tempArray;
 	unsigned int maxParticles;
 
 	glm::vec3 position;

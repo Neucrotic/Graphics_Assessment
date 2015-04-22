@@ -1,8 +1,10 @@
 #pragma once
+#include "Engine/GPUParticleEmitter.h"
 #include "Engine/Application.h"
-#include <vector>
+#include "AntTweakBar.h"
 #include "stb_image.h"
 #include "FBXFile.h"
+#include <vector>
 
 class ProceduralGen : public Application
 {
@@ -22,23 +24,44 @@ struct Vertex
 
 private:
 	
+	//TweakBar properties
+	TwBar* gui;
+
+	int numRaindrops;
+	int oldDrops;
+	bool rainChanged;
+
+	float rainSpeed;
+	float oldRSpeed;
+	bool speedChanged;
+
+	float oldSeed;
+	bool seedChanged;
+
+
 	int gridRows;
 	int gridColumns;
 
+	//shader and model IDs
 	unsigned int shaderProg;
 	unsigned int untexturedProg;
-	FBXFile* fbxModel;
+	FBXFile* fbxBunny;
+	FBXFile* fbxDragon;
 
-	int LoadTexture(std::string texture);
-	int seed;
+	GPUParticleEmitter* clouds;
+	GPUParticleEmitter* rain;
 
+	//texture IDs
 	unsigned int perlinTexture, grassTexture, sandTexture, rockTexture;
-	unsigned int indexCount;
+
+	unsigned int indexCount; //index used when generating/drawing the grid
+	int seed; //seed used to change the procedural terrain
+
+	//loads in a texture from file
+	int LoadTexture(std::string texture);
 
 	void GenerateTerrain(unsigned int rows);
 	void GenerateGrid(unsigned int rows, unsigned int cols);
-
-	void GenerateHeightMap(int _rows, int _cols);
 	float* GeneratePerlinData(int _dims, int _scale);
 
 	void CreateOpenGLBuffers(FBXFile* _model);
