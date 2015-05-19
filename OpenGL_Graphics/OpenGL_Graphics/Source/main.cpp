@@ -3,6 +3,7 @@
 #include "Tutorials\AdvTexture.h"
 #include "Tutorials\ProceduralGen.h"
 #include "Scene.h"
+#include "Tutorials\Animation.h"
 
 
 void main()

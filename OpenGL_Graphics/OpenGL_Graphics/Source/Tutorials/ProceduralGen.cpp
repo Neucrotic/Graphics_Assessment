@@ -32,7 +32,7 @@ void OnWindowResize(GLFWwindow*, int w, int h)
 
 bool ProceduralGen::Startup()
 {
-	MobileCamera* camera = new MobileCamera(100.0f, 0.1f);
+	MobileCamera* camera = new MobileCamera(1000.0f, 0.1f);
 	camera->SetInputWindow(window);
 	camera->SetupPerspective(glm::pi<float>() * 0.25f, 16.0f / 9.0f, 0.1f, 10000.0f);
 	camera->LookAt(glm::vec3(100, 100, 100), glm::vec3(0, 0, 0), glm::vec3(0, 1, 0));
@@ -43,6 +43,7 @@ bool ProceduralGen::Startup()
 
 	shaderProg = ShaderHandler::Get()->LoadShader((string)"GridShader", "Data/shaders/litTerrain.vert", "Data/shaders/litTerrain.frag", "Data/shaders/litTerrain.geom");
 	untexturedProg = ShaderHandler::Get()->LoadShader((string)"UntexturedShader", "Data/shaders/untextured.vert", "Data/shaders/untextured.frag");
+	animatedProg = ShaderHandler::Get()->LoadShader((string)"ModelShader", "Data/shaders/lighting.vert", "Data/shaders/lighting.frag");
 
 	grassTexture = LoadTexture("Data/textures/grass.jpg");
 	sandTexture = LoadTexture("Data/textures/sand.jpg");
@@ -52,10 +53,11 @@ bool ProceduralGen::Startup()
 	fbxBunny->load("Data/models/Bunny.fbx");
 	CreateOpenGLBuffers(fbxBunny);
 	
-	//initialize dragon
-	fbxDragon = new FBXFile();
-	fbxDragon->load("Data/models/Dragon.fbx");
-	CreateOpenGLBuffers(fbxDragon);
+	//initialize pyro
+	fbxPyro = new FBXFile();
+	fbxPyro->load("Data/models/Pyro/pyro.fbx");
+	fbxPyro->initialiseOpenGLTextures();
+	CreateOpenGLBuffers(fbxPyro);
 
 	//tweak bar init
 	TwInit(TW_OPENGL_CORE, nullptr);
@@ -67,30 +69,21 @@ bool ProceduralGen::Startup()
 	glfwSetCharCallback(window, OnChar);
 	glfwSetWindowSizeCallback(window, OnWindowResize);
 
-	numRaindrops = 50;
-	rainSpeed = 1.0f;
+	octaves = 6;
+	amplitude = 1.f;
 	seed = 5;
-	rainChanged = false;
-	speedChanged = false;
+	oldPersist = false;
+	oldAmp = false;
 	seedChanged = false;
 
 	gui = TwNewBar("World Editor");
 	TwAddVarRW(gui, "Terrain Seed", TW_TYPE_INT32, &seed, "");
-	TwAddVarRW(gui, "Rain Density", TW_TYPE_FLOAT, &numRaindrops, "");
-	TwAddVarRW(gui, "Rainfall Speed", TW_TYPE_FLOAT, &rainSpeed, "");
+	TwAddVarRW(gui, "Terrain Persistance", TW_TYPE_INT32, &octaves, "");
+	TwAddVarRW(gui, "Terrain Amplitude", TW_TYPE_FLOAT, &amplitude, "");
 	//property init
-	oldDrops = numRaindrops;
-	oldRSpeed = rainSpeed;
+	oldPersist = octaves;
+	oldAmp = amplitude;
 	oldSeed = seed;
-
-	//particle emitter initilization
-	clouds = new GPUParticleEmitter();
-	clouds->Init(2000, 1.0f, 1.5f, 0.25f, 0.5f, 3.0f, 2.0f, glm::vec4(0.25f, 0.25f, 0.25f, 1), glm::vec4(0.25f, 0.25f, 0.25f, 0.5f));
-	clouds->CreateUpdateShader("Data/shaders/GPUparticleUpdateCloud.vert");
-
-	rain = new GPUParticleEmitter();
-	rain->Init(numRaindrops, 1.0f, 1.5f, (rainSpeed / 2), rainSpeed, 2.0f, 1.0f, glm::vec4(0, 0, 1, 1), glm::vec4(0, 0, 0.5f, 1));
-	rain->CreateUpdateShader("Data/shaders/GPUparticleUpdateRain.vert");
 
 	return true;
 }
@@ -104,7 +97,7 @@ void ProceduralGen::Shutdown()
 {
 	//cleaning up fbx models
 	CleanupOpenGLBuffers(fbxBunny);
-	CleanupOpenGLBuffers(fbxDragon);
+	CleanupOpenGLBuffers(fbxPyro);
 
 	//LAST
 	TwDeleteAllBars();
@@ -114,28 +107,28 @@ void ProceduralGen::Shutdown()
 bool ProceduralGen::Update(double _dt)
 {
 
-	//raindrop number changes
-	if (oldDrops != numRaindrops)
+	//persistance changes
+	if (oldPersist != octaves)
 	{
-		rainChanged = true;
+		PersistChanged = true;
 	}
-	oldDrops = numRaindrops;
-	if (rainChanged == true)
+	oldPersist = octaves;
+	if (PersistChanged == true)
 	{
-		rain->Init(numRaindrops, 1.0f, 1.5f, (rainSpeed / 2), rainSpeed, 2.0f, 1.0f, glm::vec4(0, 0, 1, 1), glm::vec4(0, 0, 0.5f, 1));
-		rainChanged = false;
+		GenerateTerrain(200);
+		PersistChanged = false;
 	}
 
-	//randrop density changes
-	if (oldRSpeed != rainSpeed)
+	//amplitude changes
+	if (oldAmp != amplitude)
 	{
-		speedChanged = true;
+		ampChanged = true;
 	}
-	oldRSpeed = rainSpeed;
-	if (speedChanged == true)
+	oldAmp = amplitude;
+	if (ampChanged == true)
 	{
-		rain->Init(numRaindrops, 1.0f, 1.5f, (rainSpeed / 2), rainSpeed, 2.0f, 1.0f, glm::vec4(0, 0, 1, 1), glm::vec4(0, 0, 0.5f, 1));
-		speedChanged = false;
+		GenerateTerrain(200);
+		ampChanged = false;
 	}
 
 	//seed changes
@@ -146,12 +139,25 @@ bool ProceduralGen::Update(double _dt)
 	oldSeed = seed;
 	if (seedChanged == true)
 	{
-		GenerateGrid(200, 200);
+		//GenerateGrid(200, 200);
 		GenerateTerrain(200);
 		seedChanged = false;
 	}
 
 	m_camera->Update(_dt);
+
+	//performing animation updates
+	FBXSkeleton* skeleton = fbxPyro->getSkeletonByIndex(0);
+	FBXAnimation* animation = fbxPyro->getAnimationByIndex(0);
+
+	float timer = animation->totalTime();
+
+	skeleton->evaluate(animation, glfwGetTime());
+
+	for (unsigned int boneIndex = 0; boneIndex < skeleton->m_boneCount; ++boneIndex)
+	{
+		skeleton->m_nodes[boneIndex]->updateGlobalTransform();
+	}
 
 	return true;
 }
@@ -198,19 +204,41 @@ void ProceduralGen::Render()
 		glDrawElements(GL_TRIANGLES, (unsigned int)mesh->m_indices.size(), GL_UNSIGNED_INT, 0);
 	}
 	
-	//rendering the dragon
-	for (unsigned int i = 0; i < fbxDragon->getMeshCount(); ++i)
+	//setting up, animating and rendering the pyro
+	glUseProgram(animatedProg);
+	location = glGetUniformLocation(animatedProg, "ProjectionView");
+	glUniformMatrix4fv(location, 1, GL_FALSE, &(m_camera->GetProjectionView()[0][0]));
+	location = glGetUniformLocation(animatedProg, "LightDir");
+	glUniform3fv(location, 1, glm::value_ptr(glm::vec3(1, 0.5f, 0)));
+	location = glGetUniformLocation(animatedProg, "LightColour");
+	glUniform3fv(location, 1, glm::value_ptr(glm::vec3(1, 1, 1)));
+	location = glGetUniformLocation(animatedProg, "CameraPos");
+	glUniform3fv(location, 1, glm::value_ptr(m_camera->GetPosition()));
+	location = glGetUniformLocation(animatedProg, "SpecPow");
+	glUniform1f(location, 28);
+
+	//getting the skeleton and animation
+	FBXSkeleton* skeleton = fbxPyro->getSkeletonByIndex(0);
+	skeleton->updateBones();
+	location = glGetUniformLocation(animatedProg, "bones");
+	glUniformMatrix4fv(location, skeleton->m_boneCount, GL_FALSE, (float*)skeleton->m_bones);
+
+	for (unsigned int i = 0; i < fbxPyro->getMeshCount(); ++i)
 	{
-		FBXMeshNode* mesh = fbxDragon->getMeshByIndex(i);
-	
+		FBXMeshNode* mesh = fbxPyro->getMeshByIndex(i);
+
 		unsigned int* glData = (unsigned int*)mesh->m_userData;
-	
+
+		//mesh->m_material->textures[FBXMaterial::DiffuseTexture]->handle
+
+		glActiveTexture(GL_TEXTURE3);
+		glBindTexture(GL_TEXTURE_2D, mesh->m_material->textures[FBXMaterial::DiffuseTexture]->handle);
+
+		glUniform1i(glGetUniformLocation(animatedProg, "diffuse"), 3);
+
 		glBindVertexArray(glData[0]);
 		glDrawElements(GL_TRIANGLES, (unsigned int)mesh->m_indices.size(), GL_UNSIGNED_INT, 0);
 	}
-
-	clouds->Draw((float)glfwGetTime(), m_camera->GetTransform(), m_camera->GetProjectionView());
-	rain->Draw((float)glfwGetTime(), m_camera->GetTransform(), m_camera->GetProjectionView());
 
 	//LAST
 	TwDraw();
@@ -255,12 +283,12 @@ void ProceduralGen::GenerateTerrain(unsigned int rows)
 
 	float *perlin_data = new float[(int)dims.x * (int)dims.y];
 	float scale = (1.0f / dims.x) * 3;
-	int octaves = 6;
+	octaves = 6;
 	for (int x = 0; x < rows; ++x)
 	{
 		for (int y = 0; y < rows; ++y)
 		{
-			float amplitude = 1.f;
+			amplitude = 1.f;
 			float persistence = 0.3f;
 			perlin_data[y * (int)dims.x + x] = 0;
 			for (int o = 0; o < octaves; ++o)
@@ -386,6 +414,15 @@ void ProceduralGen::CreateOpenGLBuffers(FBXFile* _model)
 
 		glEnableVertexAttribArray(1); //normal
 		glVertexAttribPointer(1, 4, GL_FLOAT, GL_TRUE, sizeof(FBXVertex), ((char*)0) + FBXVertex::NormalOffset);
+
+		glEnableVertexAttribArray(2); //uv
+		glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(FBXVertex), ((char*)0) + FBXVertex::TexCoord1Offset);
+
+		glEnableVertexAttribArray(3); //weights
+		glVertexAttribPointer(3, 4, GL_FLOAT, GL_FALSE, sizeof(FBXVertex), ((char*)0) + FBXVertex::WeightsOffset);
+
+		glEnableVertexAttribArray(4); //indices
+		glVertexAttribPointer(4, 4, GL_FLOAT, GL_FALSE, sizeof(FBXVertex), ((char*)0) + FBXVertex::IndicesOffset);
 
 		glBindVertexArray(0);
 		glBindBuffer(GL_ARRAY_BUFFER, 0);

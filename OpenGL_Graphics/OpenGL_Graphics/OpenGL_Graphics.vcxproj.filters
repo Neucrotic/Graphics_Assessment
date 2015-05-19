@@ -75,6 +75,9 @@
     <ClCompile Include="Source\Scene.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Tutorials\Animation.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\DefaultMeshes\CubeMesh.h">
@@ -149,6 +152,9 @@
     <ClInclude Include="Dependincies\glfw\include\GLFW\glfw3.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Source\Tutorials\Animation.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Data\shaders\advTexture.frag" />
@@ -173,6 +179,9 @@
     <None Include="Data\models\Bunny.fbx" />
     <None Include="Data\models\Dragon.fbx" />
     <None Include="Data\shaders\GPUparticleUpdateCloud.vert" />
+    <None Include="Data\models\Pyro\pyro.fbx" />
+    <None Include="Data\shaders\animtation.frag" />
+    <None Include="Data\shaders\animtation.vert" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Data\textures\rock_diffuse.tga" />
@@ -186,6 +195,18 @@
     <Image Include="Data\textures\iceREPLACE .jpg">
       <Filter>Resource Files</Filter>
     </Image>
+    <Image Include="Data\models\Pyro\Flamethrower_D.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Data\models\Pyro\Flamethrower_N.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Data\models\Pyro\Flamethrower_S.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Data\models\Pyro\Pyro_D.tga" />
+    <Image Include="Data\models\Pyro\Pyro_N.tga" />
+    <Image Include="Data\models\Pyro\Pyro_S.tga" />
   </ItemGroup>
   <ItemGroup>
     <Library Include="Dependincies\glfw\lib-vc2013\glfw3.lib" />

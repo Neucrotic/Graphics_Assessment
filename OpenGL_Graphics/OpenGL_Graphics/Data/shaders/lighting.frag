@@ -2,6 +2,9 @@
 
 in vec4 vNormal;
 in vec4 vPosition;
+in vec2 vTexCoords;
+in vec4 vWeights;
+in vec4 vIndices;
 
 out vec4 FragColor;
 
@@ -10,9 +13,13 @@ uniform vec3 LightColour;
 uniform vec3 CameraPos;
 uniform float SpecPow;
 
+uniform sampler2D diffuse;
+
 void main()
 {
-	float d = max(0, dot(normalize(vNormal.xyz), LightDir));
+	vec4 diffColour = texture(diffuse, vTexCoords);
+
+	vec3 d = diffColour.xyz * max(0, dot(normalize(vNormal.xyz), LightDir));
 	
 	vec3 E = normalize(CameraPos - vPosition.xyz);
 	vec3 R = reflect(-LightDir, vNormal.xyz);

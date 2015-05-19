@@ -69,13 +69,16 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>GLM_SWIZZLE; GLM_FORCE_PURE;WIN32;NDEBUG;_CONSOLE;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(ProjectDir)Source\;$(ProjectDir)Dependincies\glm\;$(ProjectDir)Dependincies\glfw\include\;$(ProjectDir)Dependincies\TinyObj\;$(ProjectDir)Dependincies\FBXLoader\;$(ProjectDir)Dependincies\stb-master\;$(ProjectDir)Dependincies\AntTweakBar\include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalLibraryDirectories>$(ProjectDir)Dependincies\AntTweakBar\lib\;$(ProjectDir)Dependincies\FBXLoader\;$(ProjectDir)\Dependincies\glfw\lib-vc2013\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>opengl32.lib;glfw3.lib;FBXLoader_d.lib;AntTweakBar.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -97,6 +100,7 @@
     <ClCompile Include="Source\main.cpp" />
     <ClCompile Include="Source\Scene.cpp" />
     <ClCompile Include="Source\Tutorials\AdvTexture.cpp" />
+    <ClCompile Include="Source\Tutorials\Animation.cpp" />
     <ClCompile Include="Source\Tutorials\Lighting.cpp" />
     <ClCompile Include="Source\Tutorials\ProceduralGen.cpp" />
   </ItemGroup>
@@ -123,14 +127,18 @@
     <ClInclude Include="Source\gl_core_4_4.h" />
     <ClInclude Include="Source\Scene.h" />
     <ClInclude Include="Source\Tutorials\AdvTexture.h" />
+    <ClInclude Include="Source\Tutorials\Animation.h" />
     <ClInclude Include="Source\Tutorials\Lighting.h" />
     <ClInclude Include="Source\Tutorials\ProceduralGen.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Data\models\Bunny.fbx" />
     <None Include="Data\models\Dragon.fbx" />
+    <None Include="Data\models\Pyro\pyro.fbx" />
     <None Include="Data\shaders\advTexture.frag" />
     <None Include="Data\shaders\advTexture.vert" />
+    <None Include="Data\shaders\animtation.frag" />
+    <None Include="Data\shaders\animtation.vert" />
     <None Include="Data\shaders\bluePlane.frag" />
     <None Include="Data\shaders\bluePlane.vert" />
     <None Include="Data\shaders\GPUparticle.frag" />
@@ -151,6 +159,12 @@
     <None Include="Dependincies\glm\CTestConfig.cmake" />
   </ItemGroup>
   <ItemGroup>
+    <Image Include="Data\models\Pyro\Flamethrower_D.png" />
+    <Image Include="Data\models\Pyro\Flamethrower_N.png" />
+    <Image Include="Data\models\Pyro\Flamethrower_S.png" />
+    <Image Include="Data\models\Pyro\Pyro_D.tga" />
+    <Image Include="Data\models\Pyro\Pyro_N.tga" />
+    <Image Include="Data\models\Pyro\Pyro_S.tga" />
     <Image Include="Data\textures\grass.jpg" />
     <Image Include="Data\textures\iceREPLACE .jpg" />
     <Image Include="Data\textures\rock_diffuse.tga" />

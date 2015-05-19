@@ -27,17 +27,16 @@ private:
 	//TweakBar properties
 	TwBar* gui;
 
-	int numRaindrops;
-	int oldDrops;
-	bool rainChanged;
+	int octaves;
+	float oldPersist;
+	bool PersistChanged;
 
-	float rainSpeed;
-	float oldRSpeed;
-	bool speedChanged;
+	float amplitude;
+	float oldAmp;
+	bool ampChanged;
 
 	float oldSeed;
 	bool seedChanged;
-
 
 	int gridRows;
 	int gridColumns;
@@ -45,11 +44,9 @@ private:
 	//shader and model IDs
 	unsigned int shaderProg;
 	unsigned int untexturedProg;
+	unsigned int animatedProg;
 	FBXFile* fbxBunny;
-	FBXFile* fbxDragon;
-
-	GPUParticleEmitter* clouds;
-	GPUParticleEmitter* rain;
+	FBXFile* fbxPyro;
 
 	//texture IDs
 	unsigned int perlinTexture, grassTexture, sandTexture, rockTexture;

@@ -212,7 +212,7 @@ void ShaderHandler::CreateErrorShader()
 unsigned char* ShaderHandler::FileToBuffer(const char* _name)
 {
 	//open file for text reading
-	FILE* file = fopen(_name, "rb"); //ask why RB
+	FILE* file = fopen(_name, "rb"); //read binary
 	if (file == nullptr)
 	{
 		printf("Error: Unable to open file '%s'for reading...\n", _name);
